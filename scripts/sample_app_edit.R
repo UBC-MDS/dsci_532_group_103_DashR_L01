@@ -91,7 +91,7 @@ chart1 <- function(fill_val = 'avg_hatecrimes_per_100k_fbi'){
     
     p1 <- ggplot(crime_map, aes(long, lat, group = group, fill = !!sym(fill_val),
     text =paste(type_dict2[[fill_val]],":",!!sym(fill_val),
-                                '</br> State:', region)))+
+                                '</br></br> State:', region)))+
      geom_polygon(colour = "white") +   
      scale_fill_gradient(low='#ffe6e6', high='red', guide = "colourbar", name = paste(type_dict2[[fill_val]]), position = "bottom")  + 
      theme(legend.position="bottom", panel.grid.minor = element_blank(),
