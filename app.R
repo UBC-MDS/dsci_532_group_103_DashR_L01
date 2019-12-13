@@ -41,12 +41,12 @@ type_dict = tibble('gini_index' = 'Income Disparity',
                         'share_population_in_metro_areas' = 'Percentage of people in metro cities')
 
 #let's define our data and make a plot
-crime_map <- read_csv('data/crime_map.csv') %>% 
+crime_map <- read_csv('data\crime_map.csv') %>% 
               filter(region != "district of columbia")
 
-df <- read_csv('data/hate_crimes.csv') 
-crime_prop <- read_csv(file = 'data/crime_prop.csv')
-crime_trump <- read_csv(file = 'data/crime_trump.csv')
+df <- read_csv('data\hate_crimes.csv') 
+crime_prop <- read_csv(file = 'data\crime_prop.csv')
+crime_trump <- read_csv(file = 'data\crime_trump.csv')
 
 
 
