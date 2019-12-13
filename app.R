@@ -9,7 +9,7 @@ library(repr)
 library(ggplot2)
 library(broom)
 library(gridExtra)
-library("cowplot")
+
 
 app <- Dash$new()
 
@@ -108,8 +108,7 @@ chart2 <- function(x_val = 'gini_index'){
               geom_text(aes(x = -Inf, y = -Inf), 
                             label = paste0("p-value of slope = ",round(tidy(model)[[2,'p.value']],4)), 
                             hjust = -0.1, 
-                            vjust = -1) +
-              theme_bw() 
+                            vjust = -1)
     
     ggplotly(plot, width = 600, height = 400)
 }
