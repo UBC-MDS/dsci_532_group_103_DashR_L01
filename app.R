@@ -4,7 +4,6 @@ library(dashCoreComponents)
 library(dashHtmlComponents)
 library(tidyverse)
 library(plotly)
-library(gapminder)
 library(maps)
 library(repr)
 library(ggplot2)
@@ -54,7 +53,7 @@ crime_trump <- read_csv(file = 'data/crime_trump.csv')
     
 chart1 <- function(fill_val = 'avg_hatecrimes_per_100k_fbi'){
     
-    type_dict2 = tibble('avg_hatecrimes_per_100k_fbi' = 'Average hate crime \n per 100K population',
+    type_dict2 = tibble('avg_hatecrimes_per_100k_fbi' = 'Average hate crime per 100K population',
     'gini_index' = 'Income Disparity',
     'share_unemployed_seasonal'=  'Unemployment rate seasonal',
     'share_white_poverty'=  'White people poverty rate',
@@ -169,7 +168,7 @@ make_graph_3 <- function(){
 
 
 
-p1_plot <- ggplotly(p1, width = 700, height = 400)
+#p1_plot <- ggplotly(p1, width = 700, height = 400)
 
 graph1 <- dccGraph(
   id = 'graph1',
@@ -250,7 +249,7 @@ app$layout(
       dccTabs(id="tabs", value='tab-1', children=list(
       dccTab(label='Scoio-Economic factors', value='tab-1'),
       dccTab(label='General Elections' , value='tab-2')
-      )),
+      ), style = list("padding-bottom" = "10px","padding-top" = "10px")),
       htmlDiv(id='tabs-content-example') 
       
     )
@@ -290,7 +289,11 @@ app$callback(
                 Some states have much higher rates than others. This brings up a question that whether \
                 there are some factors asscoiated with the occurence of hate crimes. The analysis in this \
                 section will help to approach this question.',
-                style=list('font-family'='arial','font-size'='16px', 'padding-left'='100px','padding-bottom'='40px','color'='black')),
+                style=list('font-family'='arial','font-size'='16px', 'padding-left'='100px','padding-bottom'='10px','color'='black')),
+          htmlP('You can understand how the average hate crime rates and other socio economic factors \
+                vary across states of the U.S. with the chloropleth map. Also, you can explore which of \
+                these socio economic factors has an impact on the hate crime rate across U.S. with the scatter plot.',
+                style=list('font-family'='arial','font-size'='16px', 'padding-left'='100px','padding-bottom'='40px','color'='black')),  
           # we can add our graph here
           htmlDiv(list(
               htmlDiv(list(Dropdown1, graph1),
