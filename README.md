@@ -21,10 +21,7 @@ To explore the change of hate crime rates and its plausible relation with the vo
 
 <img src='img/Tab2.png' width = 800, height = 450>
 
-Currently some static plots for this app has been made in R. Here is a summary of the plots and the R codes that has been done. Also the R script creation for dashboard has been initiated.
 
-
-<img src='img/progress.png' width = 800, height = 450>
 
 
 **Note** - *This app is build using Dash which supports Python and R.*
