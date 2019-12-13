@@ -54,7 +54,7 @@ crime_trump <- read_csv(file = '../data/crime_trump.csv')
     
 chart1 <- function(fill_val = 'avg_hatecrimes_per_100k_fbi'){
     
-    type_dict2 = tibble('avg_hatecrimes_per_100k_fbi' = 'Average hate crime \n per 100K population',
+    type_dict2 = tibble('avg_hatecrimes_per_100k_fbi' = 'Average hate crime per 100K population',
     'gini_index' = 'Income Disparity',
     'share_unemployed_seasonal'=  'Unemployment rate seasonal',
     'share_white_poverty'=  'White people poverty rate',
@@ -169,7 +169,7 @@ make_graph_3 <- function(){
 
 
 
-p1_plot <- ggplotly(p1, width = 700, height = 400)
+
 
 graph1 <- dccGraph(
   id = 'graph1',
@@ -256,7 +256,7 @@ app$layout(
       dccTabs(id="tabs", value='tab-1', children=list(
       dccTab(label='Scoio-Economic factors', value='tab-1'),
       dccTab(label='General Elections' , value='tab-2')
-      )),
+      ), style = list("padding-bottom" = "10px","padding-top" = "10px")),
       htmlDiv(id='tabs-content-example') 
       
     )
