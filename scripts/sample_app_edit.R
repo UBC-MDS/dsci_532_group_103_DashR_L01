@@ -24,11 +24,18 @@ textStyle = list(
   color = colors$text
 )
 
-type_dict = tibble('gini_index' = 'Income Disparity',
-                        'share_unemployed_seasonal'=  'Unemployment rate seasonal',
-                        'share_white_poverty'=  'White people poverty rate',
-                        'share_non_citizen' = 'Percentage of Non-citizens',
-                        'share_population_in_metro_areas' = 'Percentage of people in metro cities')
+headerStyle = list(
+textAlign = 'center',
+"color" = 'white',
+"font-family" = 'arial',
+"background-color" = '#0404B4',
+"padding-bottom" = "10px",
+"padding-top" = "10px",
+"padding-right" = "20px",
+"padding-left" = "20px"
+)
+
+
 
 #let's define our data and make a plot
 crime_map <- read_csv('../data/crime_map.csv') %>% 
@@ -38,7 +45,7 @@ df <- read_csv('../data/hate_crimes.csv')
 
 chart2 <- function(x_val = 'gini_index'){
 
-    type_dict = tibble('gini_index' = 'Income Disparity',
+    type_dict = tibble( 'gini_index' = 'Income Disparity',
                         'share_unemployed_seasonal'=  'Unemployment rate seasonal',
                         'share_white_poverty'=  'White people poverty rate',
                         'share_non_citizen' = 'Percentage of Non-citizens',
@@ -68,40 +75,55 @@ chart2 <- function(x_val = 'gini_index'){
                             size = 5) +
               theme_bw() 
     
-    ggplotly(plot, width = 800, height = 400)
+    ggplotly(plot, width = 500, height = 400)
 }
 
+chart1 <- function(fill_val = 'avg_hatecrimes_per_100k_fbi'){
     
-p1 <- ggplot(crime_map, aes(long, lat, group = group, fill = avg_hatecrimes_per_100k_fbi))+
-     geom_polygon(colour = "white") +   
-     scale_fill_gradient(low='#ffe6e6', high='red', guide = "colourbar", name = "Average hate crime \n per 100K polpulation")  + 
-     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-     panel.background = element_blank(), axis.line = element_blank(), axis.ticks=element_blank(),axis.text=element_blank(), 
-           axis.title=element_blank()) + 
-     labs(title = 'Average hate crimes per 1OOK population in the United States') + 
-     theme_bw()
+    type_dict2 = tibble('avg_hatecrimes_per_100k_fbi' = 'Average hate crime \n per 100K population',
+    'gini_index' = 'Income Disparity',
+    'share_unemployed_seasonal'=  'Unemployment rate seasonal',
+    'share_white_poverty'=  'White people poverty rate',
+    'share_non_citizen' = 'Percentage of Non-citizens',
+    'share_population_in_metro_areas' = 'Percentage of people in metro cities')
+    
 
-p1_plot <- ggplotly(p1, width = 700, height = 400)
+    
+    p1 <- ggplot(crime_map, aes(long, lat, group = group, fill = !!sym(fill_val),
+    text =paste(type_dict2[[fill_val]],":",!!sym(fill_val),
+                                '</br> State:', region)))+
+     geom_polygon(colour = "white") +   
+     scale_fill_gradient(low='#ffe6e6', high='red', guide = "colourbar", name = paste(type_dict2[[fill_val]]), position = "bottom")  + 
+     theme(legend.position="bottom", panel.grid.minor = element_blank(),
+     panel.background = element_blank(), axis.ticks=element_blank(),axis.text=element_blank(), 
+           axis.title=element_blank()) + 
+     labs(title = paste(type_dict2[[fill_val]], "in the United States"))
+
+     plot <- ggplotly(p1, width = 700, height = 400, tooltip = c("text")) %>%
+      layout(legend = list(orientation = "h", x = -0.5, y =-1))
+    return(plot)
+}
+
 
 graph1 <- dccGraph(
   id = 'graph1',
-  figure = p1_plot
+  figure = chart1(),
+ style=list(
+'margin-left' = '50px')
 )
 
 graph2 <- dccGraph(
   id = 'graph2',
-  figure = chart2()
+  figure = chart2(),
+style=list(
+'margin-left' = '200px')
+
 )
 
-xAxisKey <- tibble(label = c('Income Disparity','Unemployment rate seasonal','White people poverty rate','Percentage of Non-citizens','Percentage of people in metro cities'),
-                   value = c('gini_index', 'share_unemployed_seasonal', 'share_white_poverty', 'share_non_citizen', 'share_population_in_metro_areas')
-)
-# m <- map(
-#     1:nrow(xaxiskey), function(i){
-#       list(label = xaxiskey$label[i], value=xaxiskey$value[i])
-#     })
 
-# print(m)
+
+
+######################
 
 Dropdown <- dccDropdown(
   id = 'factors',
@@ -114,23 +136,48 @@ Dropdown <- dccDropdown(
   ),
   value = 'gini_index',
   style=list('width' = '70%',
-              'verticalAlign' = "middle")
+              'verticalAlign' = "middle",
+              'margin-left' = '120px')
 )
 
 line <- htmlP('Select the socio-economic factor for x-axis')
+
+#########
+Dropdown1 <- dccDropdown(
+id = 'factors_1',
+options =  list(
+list(label = 'Average hate crime', value= 'avg_hatecrimes_per_100k_fbi'),
+list(label = 'Income Disparity', value= 'gini_index'),
+list(label = 'Unemployment rate seasonal', value= 'share_unemployed_seasonal'),
+list(label = 'White people poverty rate', value= 'share_white_poverty'),
+list(label = 'Percentage of Non-citizens', value= 'share_non_citizen'),
+list(label = 'Percentage of people in metro cities', value= 'share_population_in_metro_areas')
+),
+value = 'avg_hatecrimes_per_100k_fbi',
+style=list('width' = '70%',
+'verticalAlign' = "middle",
+'margin-left' = '50px')
+)
+
+line <- htmlP('Select the socio-economic factor for group')
+
+
+
 
 app$layout(
   htmlDiv(
     list(
       #See our styles applied to the headers
-      htmlH1('U.S. Hate Crime Analysis', style = textStyle),
-      htmlH3('Using this App, you can explore the relationship between different socio-economic factors (income, unemployment, \
+      htmlDiv(
+      list(
+      htmlH1('U.S. Hate Crime Analysis', style = headerStyle),
+      htmlP('Using this App, you can explore the relationship between different socio-economic factors (income, unemployment, \
       education, etc) and hate crime rates. It can also be used to investigte the change of hate crime rates before and after the \
-      U.S. president election in 2016.', style = textStyle),
+      U.S. president election in 2016.')),style = headerStyle),
       dccTabs(id="tabs", value='tab-1', children=list(
       dccTab(label='Scoio-Economic factors', value='tab-1'),
       dccTab(label='General Elections' , value='tab-2')
-      )),
+), style = list("padding-bottom" = "10px","padding-top" = "10px")),
       htmlDiv(id='tabs-content-example') 
       
     )
@@ -147,6 +194,17 @@ app$callback(
   })
 
 app$callback(
+#update figure of gap-graph
+output=list(id = 'graph1', property='figure'),
+#based on values of year, continent, y-axis components
+params=list(input(id = 'factors_1', property='value')),
+function(factors_value) {
+    chart1(factors_value)
+})
+
+
+
+app$callback(
   #update figure of gap-graph
   output=list(id = 'tabs-content-example', property = 'children'),
   #based on values of year, continent, y-axis components
@@ -155,7 +213,7 @@ app$callback(
    
     if (tab == 'tab-1'){
         return(htmlDiv(list(
-          htmlDiv(children = "Analysis of U.S hate crime rates from 2010-2015", style = textStyle),
+          htmlH2(children = "Analysis of U.S hate crime rates from 2010-2015", style = list('font-family'='arial','font-size'='20px', 'padding-left'='400px', 'padding-top'='50px')),
           htmlP('The hate crimes are not evenly distributed across all the states in the U.S. \
                 Some states have much higher rates than others. This brings up a question that whether \
                 there are some factors asscoiated with the occurence of hate crimes. The analysis in this \
@@ -163,9 +221,11 @@ app$callback(
                 style=list('font-family'='arial','font-size'='16px', 'padding-left'='100px','padding-bottom'='40px','color'='black')),
           # we can add our graph here
           htmlDiv(list(
-              htmlDiv(graph1,style= list('display'='inline-block','width'='55%','border-width'='0')),
+              htmlDiv(list(Dropdown1, graph1),
+                       style=list('display'='inline-block','width'='40%','border-width'='0')),
               htmlDiv(list(Dropdown, graph2),
                       style=list('display'='inline-block','width'='40%','border-width'='0'))
+            
           )) 
         )))
         }
