@@ -6,6 +6,8 @@
 * Sukriti Trehan
 * Subing Cao
 
+Link to [Hate Crime App DashR](https://dsci-532-group-103-dashr-app.herokuapp.com/)
+
 [Team Contract](https://github.ubc.ca/MDS-2019-20/DSCI_532_milestone1_saurav99/blob/master/Contract.md)
 
 ## Overview and Usage of the App
